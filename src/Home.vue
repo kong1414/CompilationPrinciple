@@ -4,8 +4,10 @@
     <h5>作者：邱冠霖1607052230</h5>
     <!-- 终结符与非终结符 -->
     <el-row>
-      <el-button type="warning" @click="restart">初始化</el-button>
-      <el-button type="success" @click="getDemo">DEMO</el-button>
+      <el-button type="warning"
+                 @click="restart">初始化</el-button>
+      <el-button type="success"
+                 @click="getDemo">DEMO</el-button>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
@@ -42,7 +44,8 @@
 
     </el-row>
     <el-row>
-      <el-button type="primary" @click="handleInputEnd">提交终结符</el-button>
+      <el-button type="primary"
+                 @click="handleInputEnd">提交终结符</el-button>
     </el-row>
     <!-- 产生式 -->
     <el-row :gutter="20">
@@ -71,7 +74,8 @@
       </el-card>
     </el-row>
     <el-row>
-      <el-button type="primary" @click="handlePro">提交产生式</el-button>
+      <el-button type="primary"
+                 @click="handlePro">提交产生式</el-button>
     </el-row>
     <!-- first,follow -->
     <el-row :gutter="20">
@@ -81,7 +85,16 @@
             <span>FIRST集</span>
           </div>
           <p v-for="i in notEnd"
-             :key="i">FIRST( {{i[0]}} ) : {{first[i[0]]}}</p>
+             :key="i"
+             style="margin: 0;">
+            FIRST( {{i[0]}} ) :
+            <!-- {{ first[i[0]] }} -->
+            <el-tag :key="tag"
+                    v-for="tag in first[i[0]]"
+                    :disable-transitions="true"
+                    style="margin-top:10px">{{tag}}</el-tag>
+            <el-divider></el-divider>
+          </p>
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -90,7 +103,16 @@
             <span>FOLLOW集</span>
           </div>
           <p v-for="i in notEnd"
-             :key="i">FOLLOW( {{i[0]}} ) : {{follow[i[0]]}}</p>
+             :key="i"
+             style="margin: 0;">
+            FOLLOW( {{i[0]}} ) :
+            <!-- {{follow[i[0]]}} -->
+            <el-tag :key="tag"
+                    v-for="tag in follow[i[0]]"
+                    :disable-transitions="true"
+                    style="margin-top:5px">{{tag}}</el-tag>
+            <el-divider></el-divider>
+            </p>
         </el-card>
       </el-col>
     </el-row>
@@ -146,7 +168,8 @@
         <el-input v-model="inputSentence"
                   placeholder="请输入句子" />
 
-        <el-button type="primary" @click="handleAnalyze"
+        <el-button type="primary"
+                   @click="handleAnalyze"
                    style="margin-top:10px">确定</el-button>
       </el-card>
     </el-row>
@@ -155,13 +178,13 @@
       <el-card>
         <el-table :data="analyzeInfo">
           <el-table-column prop="stackCur"
-                          label="栈"
-                          align="left" />
+                           label="栈"
+                           align="left" />
           <el-table-column prop="sentenceCur"
-                          label="输入"
-                          align="right" />
+                           label="输入"
+                           align="right" />
           <el-table-column prop="msg"
-                          label="动作" />
+                           label="动作" />
         </el-table>
       </el-card>
     </el-row>
@@ -192,16 +215,8 @@ export default {
     }
   },
   created () {
-    this.init()
   },
   methods: {
-    init () {
-      // 构造一个 table[100][100] 的预测分析表
-      this.table = new Array(100)
-      for (let i = 0; i < 100; i++) {
-        this.table[i] = new Array(100)
-      }
-    },
     handleInputEnd () { // 处理终结符和非终结符
       // 处理终结符
       let arr = []
@@ -215,7 +230,7 @@ export default {
       // 拆封然后依次赋值
       arr.push(...this.inputNotEnd.split(' '))
       this.notEnd = arr
-
+      // 完整性验证
       this.end = this.end.filter(i => {
         if (i.length > 1) {
           this.$message.warning('终结符：' + i + ' 错误，原因：只支持单个字符')
@@ -224,7 +239,6 @@ export default {
           return true
         }
       })
-
       this.notEnd = this.notEnd.filter(i => {
         if (i.length > 1) {
           this.$message.warning('非终结符：' + i + ' 错误，原因：只支持单个字符')
@@ -241,11 +255,8 @@ export default {
         this.first[i] = []
         this.follow[i] = []
       })
-      // if (i.length>1){
-      //     this.$message.err('只支持单字符')
-      //   }
-      console.log('终结符', this.end)
-      console.log('非终结符', this.notEnd)
+      console.log('终结符end', this.end)
+      console.log('非终结符notEnd', this.notEnd)
     },
     handlePro () { // 提交产生式
       let proce = []
@@ -276,7 +287,7 @@ export default {
       })
       this.proceList = proceList
 
-      console.info('proce产生式', this.proce)
+      console.info('产生式proce', this.proce)
 
       this.getFirst()
       this.getFollow()
@@ -292,7 +303,7 @@ export default {
       this.notEnd.map(i => {
         this.first[i] = [...new Set(this.first[i])] // 去重
       })
-      // console.info('first', this.first)
+      console.info('first', this.first)
     },
     getAFirst (letter) { // 求 给定单个字母的first集 数组
       let res = []
@@ -343,6 +354,7 @@ export default {
         })
         this.follow[i] = arr
       })
+      console.info('follow', this.follow)
       // 对于文法的开始符号S,置$于FOLLOW(S)中
       // 若A->aBb是一个产生式,则把FIRST(b){ε}加至FOLLOW(B)中;
       // 若A->aB是一个产生式,或A->aBb是一个产生式而b=>ε(即ε∈FIRST(b))则把FOLLOW(A)加至FOLLOW(B)中
@@ -375,23 +387,19 @@ export default {
         obj.selectList = [...new Set(obj.selectList)]
       })
       this.select = [...new Set(this.select)] // 去重
-
       this.selectTableData = select // 赋值给表格
       console.info('select集合', select)
     },
-    getPredictAnalyzeTable () {
+    getPredictAnalyzeTable () { // 获取预测分析表
       let table = []
       // 构造二维数组
-      this.notEnd.map(i => {
+      this.notEnd.map(i => { // 每个非终结符对象 都有 全部的终结符子对象
         table[i] = {}
+        // console.info(table)
         this.end.map(j => {
           table[i][j] = ''
         })
       })
-
-      this.predictAnalyzeTable = table
-      console.info('PredictAnalyzeTable预测分析表数据', this.predictAnalyzeTable)
-
       this.selectTableData.map(select => { // 依次便利 构造可视化的产生式
         let pro = select.proce
         let list = select.selectList
@@ -403,6 +411,8 @@ export default {
           table[pro[0]][i] = str
         })
       })
+      this.predictAnalyzeTable = table
+      console.info('PredictAnalyzeTable预测分析表', this.predictAnalyzeTable)
 
       // 可视化
       let tableData = [] // 构造表格数据
@@ -416,7 +426,6 @@ export default {
           }
           one[b] = (table[a][b]) // 把产生式数据 赋值上去
         }
-        // console.info('this.end', this.end)
         tableData.push(one)
       }
       console.info('tableData预测分析表表格数据', tableData)
@@ -436,14 +445,11 @@ export default {
     getAnalyzeTable () { // 生成分析过程
       this.analyzeInfo = [] // 初始化
       let sentence = this.inputSentence.split('') // 分成数组，方便操作
-      let tableData = []
       let stack = []
       stack[0] = '$'
       stack[1] = this.notEnd[0]
-
       let i = 0; // 表明当前字符是句子中的第几个
-      // let top = 0; // 栈顶
-
+      // let top; // 栈顶元素
       this.analyzeLog(stack.slice(0), sentence.slice(i), '') // 生成动作表
       while (stack.length) {
         // 获取输入的当前需要的字符和栈顶字符
@@ -462,7 +468,6 @@ export default {
           i++
           this.analyzeLog(stack.slice(0), sentence.slice(i), '匹配' + curLetter)
         } else if (this.predictAnalyzeTable[top][curLetter] !== '') {
-
           // 查找table[栈顶字符][输入的当前字符] 是否存在值 
           // 找出table中对应的值(以数组的形式放着)
           let tmp = this.predictAnalyzeTable[top][curLetter] // 获取产生式的动作
@@ -478,13 +483,9 @@ export default {
         }
         // this.analyzeLog(stack, sentence.slice(i), '')
         console.info('stack1', stack)
-        // console.info('curLetter', sentence.slice(i))
-        // break;
       }
     },
     analyzeLog (stackCur, sentenceCur, msg) {
-      // console.info('stackCur',stackCur)
-      // let stackCurTmp = 
       let obj = {
         'stackCur': stackCur,
         'sentenceCur': sentenceCur,
@@ -559,5 +560,8 @@ export default {
 }
 .el-tag + .el-tag {
   margin-left: 10px;
+}
+.el-divider--horizontal {
+  margin: 10px 0 !important;
 }
 </style>
