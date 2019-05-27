@@ -10,7 +10,7 @@
                  @click="getDemo">DEMO</el-button>
     </el-row>
     <el-row :gutter="20">
-      <el-col :span="12">
+      <el-col :xs="24" :sm="12">
         <el-card>
           <div slot="header">
             终结符
@@ -26,7 +26,7 @@
           </el-tag>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :xs="24" :sm="12">
         <el-card>
           <div slot="header">
             非终结符
@@ -79,7 +79,7 @@
     </el-row>
     <!-- first,follow -->
     <el-row :gutter="20">
-      <el-col :span="12">
+      <el-col :xs="24" :sm="12">
         <el-card style="text-align: left;">
           <div slot="header">
             <span>FIRST集</span>
@@ -92,12 +92,12 @@
             <el-tag :key="tag"
                     v-for="tag in first[i[0]]"
                     :disable-transitions="true"
-                    style="margin-top:10px">{{tag}}</el-tag>
+                    style="margin-top:5px">{{tag}}</el-tag>
             <el-divider></el-divider>
           </p>
         </el-card>
       </el-col>
-      <el-col :span="12">
+      <el-col :xs="24" :sm="12">
         <el-card style="text-align: left;">
           <div slot="header">
             <span>FOLLOW集</span>
@@ -163,7 +163,7 @@
     <el-row>
       <el-card>
         <div slot="header">
-          输入要翻译的句子
+          输入要分析的句子
         </div>
         <el-input v-model="inputSentence"
                   placeholder="请输入句子" />
@@ -176,6 +176,9 @@
 
     <el-row>
       <el-card>
+        <div slot="header">
+          分析过程
+        </div>
         <el-table :data="analyzeInfo">
           <el-table-column prop="stackCur"
                            label="栈"
@@ -202,12 +205,12 @@ export default {
       inputSentence: 'a*a+a$', // 输入句子
       proceList: [], // 产生式的列表
       // 以下是处理
-      end: [],
-      notEnd: [],
+      end: [], // 终结符
+      notEnd: [], // 终结符
       predictAnalyzeTable: [], // 预测分析表
       proce: [], // 预测表数组
-      first: [],
-      follow: [],
+      first: [], // first集
+      follow: [], // follow集
       selectTableData: [], // 选择集 表格数据
       predictAnalyzeTableData: [], // 预测分析表
       predictAnalyzeTableColumn: [], // 预测分析表的列
